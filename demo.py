@@ -1,6 +1,6 @@
 from __future__ import print_function
-from base import BaseSpider
-from fields import PQField, PQListField
+from gspider import BaseSpider
+from gspider import PQField, PQListField
 from six import print_ as print
 
 

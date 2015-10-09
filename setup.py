@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="GSpider",
@@ -10,4 +10,5 @@ setup(
         "pyquery",
         "six",
     ],
+    packages = find_packages()
 )
