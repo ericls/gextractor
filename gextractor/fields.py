@@ -2,9 +2,10 @@
 from pyquery import PyQuery as Pq
 import re
 
+
 class PQField(object):
 
-    def __init__(self, selector, format='text'):
+    def __init__(self, selector, format='text', callback=None):
         """
         :param selector: css selector, refer to pyquery
         :param format: 'text' - calls text() of selected element(s)
@@ -13,15 +14,22 @@ class PQField(object):
         """
         self.selector = selector
         self._type = format
+        self.callback = callback
 
     def __get__(self, instance, owner):
         _selected = instance.dom(self.selector)
+        value = None
         if self._type == 'text':
-            return _selected.text()
+            value = _selected.text()
         elif self._type == 'element':
-            return _selected
+            value = _selected
         elif self._type == 'html':
-            return _selected.html()
+            value = _selected.html()
+
+        if self.callback:
+            value = self.callback(value)
+
+        return value
 
 
 class PQListField(PQField):
@@ -51,9 +59,8 @@ class RegField(object):
     def __get__(self, instance, owenr):
         if isinstance(instance.dom, Pq):
             return self.regex.finditer(instance.dom.html())
-        else: # TODO: Other conditions, may be?
+        else:  # TODO: Other conditions, may be?
             return self.regex.finditer(instance)
 
 
-# TODO: implement custom `parser` to fields
-# TODO: implement filter the pyquery way to fields
+# TODO: implement filter (the pyquery way) to fields
